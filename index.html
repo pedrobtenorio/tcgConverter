@@ -38,7 +38,7 @@
         const param = pokemon.value;
         console.log(param);
         event.preventDefault();
-        const url = 'http://localhost:8080/api/cards?query=' + pokemon.value;
+        const url = 'http://' + window.location.host + ':8080/api/cards?query=' + pokemon.value;
         fetch(url, {
             method: 'GET',
             responseType: 'blob'
