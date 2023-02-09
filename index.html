@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Search Bar</title>
+    <style>
+        .search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .search-bar {
+            width: 50%;
+            padding: 1em;
+            border: 1px solid gray;
+            border-radius: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="search-container">
+        <form class="search-bar">
+            <input id="input" type="text" placeholder="Search For a pokemon">
+            <button id="btn" type="submit">Search</button>
+        </form>
+    </div>
+</body>
+
+<script>
+    const search = document.getElementById("btn");
+    search.onclick = function downLoadExcell(event) {
+        const pokemon = document.getElementById("input")
+        const param = pokemon.value;
+        console.log(param);
+        event.preventDefault();
+        const url = 'http://localhost:8080/api/cards?query=' + pokemon.value;
+        fetch(url, {
+            method: 'GET',
+            responseType: 'blob'
+        })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(new Blob([blob]));
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'download.xlsx';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+</script>
+
+</html>
