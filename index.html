@@ -167,6 +167,7 @@
     const search = document.getElementById("btn");
     search.onclick = function downLoadExcell(event) {
         const pokemon = document.getElementById("input")
+        console.log(pokemon.value);
         const param = pokemon.value;
         if (!param) {
             return;
@@ -187,7 +188,7 @@
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = url;
-                a.download = 'download.xlsx';
+                a.download = pokemon.value + '.xlsx';
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
