@@ -3,21 +3,131 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Search Bar</title>
+    <title>TCG to Excell</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital@1&display=swap" rel="stylesheet">
     <style>
-        .search-container {
+        .container {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 30vh;
+
         }
 
-        .search-bar {
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        #input::-webkit-input-placeholder {
+            color: #000000;
+            opacity: 1 !important;
+
+        }
+
+        #input::-moz-placeholder {
+            color: #000000;
+            opacity: 1 !important;
+
+        }
+
+        #input:-ms-input-placeholder {
+            color: #000000;
+            opacity: 1 !important;
+
+        }
+
+        #input::-ms-input-placeholder {
+            color: #000000;
+            opacity: 1 !important;
+
+        }
+
+        #input::placeholder {
+            color: #000000;
+            opacity: 1 !important;
+
+
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
             width: 50%;
             padding: 1em;
-            border: 1px solid gray;
-            border-radius: 10px;
+            position: relative;
+        }
+
+        #input {
+            width: 80%;
+            padding: 0.5em;
+            border-radius: 20px 0px 0px 20px;
+            opacity: 0.6;
             text-align: center;
+            font-size: 1.2em;
+            font-weight: bolder;
+            border: none;
+            height: 2em;
+            display: inline-block;
+            font-family: inherit;
+        }
+
+
+        button#btn {
+            border: none;
+            border-radius: 0px 20px 20px 0px;
+            color: rgb(0, 0, 0);
+            cursor: pointer;
+            font-size: 1.2em;
+            padding: 1em;
+            opacity: 0.6;
+            opacity: 0.5;
+            height: 3em;
+            display: inline-block;
+        }
+
+        #input:focus {
+            outline: none;
+        }
+
+        #btn i {
+            padding-right: 5px;
+        }
+
+        #bg {
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            height: 100vh;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .presentation {
+            background-color: rgb(255, 255, 255, 0.6);
+            max-width: 50%;
+            padding: 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .loading {
+            background-color: gray;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #loading-gif {
+            width: 24px;
+        }
+
+        a:active {
+            color: inherit;
         }
     </style>
 
@@ -26,22 +136,47 @@
 </head>
 
 <body>
-    <div class="search-container">
-        <form class="search-bar">
-            <input id="input" type="text" placeholder="Search For a pokemon">
-            <button id="btn" type="submit">Search</button>
-        </form>
+    <div id="bg">
+        <div class="container">
+            <div class="presentation">
+                This WebSite fetch data from <a href="https://pokemontcg.io/"
+                    style="text-decoration: none; color: inherit;">https://pokemontcg.io/</a>
+                ,
+                you can put the name of pokemon to get all cards that exist in a excell file
+                the query can be mane with the exact name such as "snorlax" to get the exact pokemon,
+                or you can put "char" to get all pokemon that start with char.
+            </div>
+        </div>
+        <div class="container">
+            <div class="input-group">
+                <input id="input" type="text" placeholder="Search for a pokemon">
+                <button id="btn" type="submit">
+                    <img id="loading-gif" src="images/loading-circle.gif" style="display: none;">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
     </div>
 </body>
 
 <script>
+    var width = screen.width;
+    var height = screen.height;
+    console.log("Screen Resolution: " + width + " x " + height);
+
     const search = document.getElementById("btn");
     search.onclick = function downLoadExcell(event) {
         const pokemon = document.getElementById("input")
         const param = pokemon.value;
-        console.log(param);
+        if (!param) {
+            return;
+        }
+        const loadingGif = document.getElementById("loading-gif");
+        const lupe = document.getElementsByClassName("fas fa-search")[0];
         event.preventDefault();
-        const url = 'http://' + window.location.host + '/api/cards?query=' + pokemon.value;
+        loadingGif.style.display = "inline-block";
+        lupe.style.display = "none";
+        const url = 'http://' + "localhost:8080" + '/api/cards?query=' + pokemon.value;
         fetch(url, {
             method: 'GET',
             responseType: 'blob'
@@ -57,11 +192,54 @@
                 a.click();
                 window.URL.revokeObjectURL(url);
                 a.remove();
+                lupe.style.display = "inline-block";
+                loadingGif.style.display = "none";
             })
             .catch(error => {
                 console.error('Error:', error);
+                lupe.style.display = "inline-block";
+                loadingGif.style.display = "none";
             });
     }
+
+
+    const bg = document.getElementById("bg");
+
+    const images = {
+        "small": [
+            "images/image1small.jpg",
+            "images/image2small.jpg",
+            "images/image3small.jpg"
+        ],
+        "medium": [
+            "images/image1medium.jpg",
+            "images/image2medium.jpg",
+            "images/image3medium.jpg"
+        ],
+        "big": [
+            "images/image1big.jpg",
+            "images/image2big.jpg",
+            "images/image3big.jpg"
+        ],
+    };
+
+    function setRandomImage() {
+        const screenWidth = window.innerWidth;
+        let imagesArray;
+
+        if (screenWidth <= 640) {
+            imagesArray = images.small;
+        } else if (screenWidth > 640 && screenWidth <= 1024) {
+            imagesArray = images.medium;
+        } else {
+            imagesArray = images.big;
+        }
+
+        const randomIndex = Math.floor(Math.random() * imagesArray.length);
+        bg.style.backgroundImage = `url(${imagesArray[randomIndex]})`;
+    }
+
+    setRandomImage();
 
 </script>
 
