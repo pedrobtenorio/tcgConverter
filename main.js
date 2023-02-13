@@ -73,7 +73,7 @@ window.onload = function () {
         event.preventDefault();
         loadingGif.style.display = "inline-block";
         lupe.style.display = "none";
-        const url = 'http://' + "localhost:8080" + '/api/cards?query=' + pokemon.value;
+        const url = 'http://' + window.location.host + '/api/cards?query=' + pokemon.value;
         fetch(url, {
             method: 'GET'
         })
