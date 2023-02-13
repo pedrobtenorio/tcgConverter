@@ -1,41 +1,10 @@
 
 
+let cards = ''
+let param = ''
+
 
 window.onload = function () {
-
-
-    let fullData = ''
-    let param = ''
-
-    function createExcell() {
-        if (!fullData) {
-            console.error("fullData is not available yet");
-            return;
-        }
-        if (typeof fullData !== 'object' || !Array.isArray(fullData)) {
-            console.error('fullData is not an array');
-            return;
-        }
-
-        const filteredData = fullData.cards(item => {
-            return {
-                "ID": item.id,
-                "Name": item.name,
-                "Number (First number in the bottom of the card)": item.number,
-                "Total Printed (second number in the bottom of the card)": item.set.printedTotal,
-                "Artist": item.artist,
-                "Rarity": item.rarity,
-                "Flavor Text": item.flavorText,
-                "Set": item.set.name
-            }
-        });
-
-        const ws = XLSX.utils.json_to_sheet(filteredData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, ws, "Sheet1");
-        XLSX.writeFile(workbook, document.getElementById("input").value + ".xlsx");
-
-    }
 
     const exportbtn = document.getElementById("exportExcell");
     exportbtn.addEventListener("click", createExcell);
@@ -65,7 +34,7 @@ window.onload = function () {
         })
             .then(response => response.json())
             .then(data => {
-                const cards = data.data;
+                cards = data.data;
                 console.log(cards);
                 const imagesUrl = cards.map(obj => obj.images.small)
                 const imageContainer = document.getElementById("image-container");
@@ -128,4 +97,44 @@ window.onload = function () {
         bg.style.backgroundImage = `url(${imagesArray[randomIndex]})`;
     }
     setRandomImage()
+}
+
+function createExcell() {
+    if (!cards) {
+        console.error("cards is not available yet");
+        return;
+    }
+    if (typeof cards !== 'object' || !Array.isArray(cards)) {
+        console.error('cards is not an array');
+        return;
+    }
+    console.log("exporting")
+    const filteredData = cards.map(item => {
+        return {
+            "ID": item.id,
+            "Name": item.name,
+            "Number (First number in the bottom of the card)": item.number,
+            "Total Printed (second number in the bottom of the card)": item.set.printedTotal,
+            "Artist": item.artist,
+            "Rarity": item.rarity,
+            "Flavor Text": item.flavorText,
+            "Set": item.set.name
+        }
+    });
+
+    const ws = XLSX.utils.json_to_sheet(filteredData);
+    ws['!cols'] = [
+        { width: 10 },
+        { width: 20 },
+        { width: 10 },
+        { width: 10 },
+        { width: 25 },
+        { width: 10 },
+        { width: 110 },
+        { width: 25 },
+    ];
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, ws, "Sheet1");
+    XLSX.writeFile(workbook, document.getElementById("input").value + ".xlsx");
+
 }
