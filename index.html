@@ -8,18 +8,20 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital@1&display=swap" rel="stylesheet">
+    <script src="node_modules/xlsx/dist/xlsx.full.min.js"></script>
     <style>
         .container {
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            height: 30vh;
-
+            justify-content: center;
+            height: 100vh;
         }
 
-        body {
-            font-family: 'Poppins', sans-serif;
+        .box {
+            padding: 10px;
+            margin-bottom: 10px;
+            display: contents;
         }
 
         #input::-webkit-input-placeholder {
@@ -56,7 +58,7 @@
         .input-group {
             display: flex;
             align-items: center;
-            width: 50%;
+            justify-content: center;
             padding: 1em;
             position: relative;
         }
@@ -75,6 +77,25 @@
             font-family: inherit;
         }
 
+        #exportExcell {
+            margin: 5px;
+            border-radius: 20px;
+            border: none;
+            background-color: rgb(255, 255, 255, 0.6);
+            padding: 10px;
+            color: #000000;
+            opacity: 1 !important;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+        }
+
+        #exportExcell:hover {
+            width: 150px;
+            height: 150px;
+            border: 1px solid;
+            border-color: #000000;
+        }
+
 
         button#btn {
             border: none;
@@ -87,14 +108,6 @@
             opacity: 0.5;
             height: 3em;
             display: inline-block;
-        }
-
-        #input:focus {
-            outline: none;
-        }
-
-        #btn i {
-            padding-right: 5px;
         }
 
         #bg {
@@ -111,23 +124,68 @@
         .presentation {
             background-color: rgb(255, 255, 255, 0.6);
             max-width: 50%;
-            padding: 15px;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
             border-radius: 20px;
             font-weight: bold;
         }
 
-        .loading {
-            background-color: gray;
-            opacity: 0.6;
-            cursor: not-allowed;
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
         }
 
-        #loading-gif {
-            width: 24px;
+        #input:focus {
+            outline: none;
         }
 
-        a:active {
-            color: inherit;
+        #btn i {
+            padding-right: 5px;
+        }
+
+
+
+        html,
+        body {
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        #image-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            overflow: auto
+        }
+
+        #image-container img {
+            margin-bottom: 10px;
+            padding: 1%;
+        }
+
+        .header {
+            overflow: hidden;
+            background-color: #f1f1f1;
+            padding: 20px 10px;
+            background-color: rgb(255, 255, 255, 0.6);
+        }
+
+        @media only screen and (max-width: 600px) {
+            .container {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .box {
+                flex-basis: calc(50% - 10px);
+                margin-right: 10px;
+                margin-bottom: 10px;
+            }
+
+            .box:last-child {
+                margin-right: 0;
+            }
         }
     </style>
 
@@ -138,109 +196,38 @@
 <body>
     <div id="bg">
         <div class="container">
-            <div class="presentation">
-                This WebSite fetch data from <a href="https://pokemontcg.io/"
-                    style="text-decoration: none; color: inherit;">https://pokemontcg.io/</a>
-                ,
-                you can put the name of pokemon to get all cards that exist in a excell file
-                the query can be mane with the exact name such as "snorlax" to get the exact pokemon,
-                or you can put "char" to get all pokemon that start with char.
+            <div class="box">
+                <div class="presentation">
+                    <p>This WebSite fetch data from <a href="https://pokemontcg.io/"
+                            style="text-decoration: none; color: inherit;">https://pokemontcg.io/</a>
+                        ,
+                        you can put the name of pokemon to get all cards that exist in a excell file
+                        the query can be mane with the exact name such as "snorlax" to get the exact pokemon,
+                        or you can put "char" to get all pokemon that start with char.</p>
+                </div>
             </div>
-        </div>
-        <div class="container">
-            <div class="input-group">
-                <input id="input" type="text" placeholder="Search for a pokemon">
-                <button id="btn" type="submit">
-                    <img id="loading-gif" src="images/loading-circle.gif" style="display: none;">
-                    <i class="fas fa-search"></i>
+            <div class="box">
+                <div class="input-group">
+                    <input id="input" type="text" placeholder="Search for a pokemon">
+                    <button id="btn" type="submit">
+                        <img id="loading-gif" src="images/loading-circle.gif" style="display: none;">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box">
+                <button id="exportExcell" type="submit" style="display: none;" onclick="createExcell()">
+                    export to excell
+
                 </button>
+                <div id="image-container" alt="Large image"></div>
             </div>
         </div>
     </div>
+
 </body>
 
-<script>
-    var width = screen.width;
-    var height = screen.height;
-    console.log("Screen Resolution: " + width + " x " + height);
-
-    const search = document.getElementById("btn");
-    search.onclick = function downLoadExcell(event) {
-        const pokemon = document.getElementById("input")
-        console.log(pokemon.value);
-        const param = pokemon.value;
-        if (!param) {
-            return;
-        }
-        const loadingGif = document.getElementById("loading-gif");
-        const lupe = document.getElementsByClassName("fas fa-search")[0];
-        event.preventDefault();
-        loadingGif.style.display = "inline-block";
-        lupe.style.display = "none";
-        const url = 'http://' + window.location.host + '/api/cards?query=' + pokemon.value;
-        fetch(url, {
-            method: 'GET',
-            responseType: 'blob'
-        })
-            .then(response => response.blob())
-            .then(blob => {
-                const url = window.URL.createObjectURL(new Blob([blob]));
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                a.download = pokemon.value + '.xlsx';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                a.remove();
-                lupe.style.display = "inline-block";
-                loadingGif.style.display = "none";
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                lupe.style.display = "inline-block";
-                loadingGif.style.display = "none";
-            });
-    }
-
-
-    const bg = document.getElementById("bg");
-
-    const images = {
-        "small": [
-            "images/image1small.jpg",
-            "images/image2small.jpg",
-            "images/image3small.jpg"
-        ],
-        "medium": [
-            "images/image1medium.jpg",
-            "images/image2medium.jpg",
-            "images/image3medium.jpg"
-        ],
-        "big": [
-            "images/image1big.jpg",
-            "images/image2big.jpg",
-            "images/image3big.jpg"
-        ],
-    };
-
-    function setRandomImage() {
-        const screenWidth = window.innerWidth;
-        let imagesArray;
-
-        if (screenWidth <= 640) {
-            imagesArray = images.small;
-        } else if (screenWidth > 640 && screenWidth <= 1024) {
-            imagesArray = images.medium;
-        } else {
-            imagesArray = images.big;
-        }
-
-        const randomIndex = Math.floor(Math.random() * imagesArray.length);
-        bg.style.backgroundImage = `url(${imagesArray[randomIndex]})`;
-    }
-
-    setRandomImage();
+<script type="module" src="main.js">
 
 </script>
 
