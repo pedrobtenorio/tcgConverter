@@ -17,7 +17,7 @@ window.onload = function () {
             return;
         }
 
-        const filteredData = fullData.map(item => {
+        const filteredData = fullData.cards(item => {
             return {
                 "ID": item.id,
                 "Name": item.name,
@@ -32,23 +32,6 @@ window.onload = function () {
 
         const ws = XLSX.utils.json_to_sheet(filteredData);
         const workbook = XLSX.utils.book_new();
-        const columns = ["A", "B", "C", "D", "E", "F", "G", "H"];
-        columns.forEach(column => {
-            ws[`${column}1`].s = { font: { bold: true } };
-        });
-        for (let col = 0; col < filteredData[0].length; col++) {
-            let longestValueLength = 0;
-            for (let row = 0; row < filteredData.length; row++) {
-                const value = filteredData[row][col];
-                if (value.toString().length > longestValueLength) {
-                    longestValueLength = value.toString().length;
-                }
-            }
-            const column = XLSX.utils.encode_col(col);
-            for (let i = 1; i <= filteredData.length; i++) {
-                ws[`${column}${i}`].w = longestValueLength * 1.5;
-            }
-        }
         XLSX.utils.book_append_sheet(workbook, ws, "Sheet1");
         XLSX.writeFile(workbook, document.getElementById("input").value + ".xlsx");
 
@@ -73,19 +56,23 @@ window.onload = function () {
         event.preventDefault();
         loadingGif.style.display = "inline-block";
         lupe.style.display = "none";
-        const url = 'http://' + window.location.host + '/api/cards?query=' + pokemon.value;
-        fetch(url, {
-            method: 'GET'
+        const url = "https://api.pokemontcg.io/v2/cards?q=name:" + param;
+        const headers = {
+            "x-api-key": "46b0dc2d-5668-4467-93f7-acfd30d2c085"
+        };
+        const response = fetch(url, {
+            headers
         })
             .then(response => response.json())
             .then(data => {
-                fullData = data;
-                console.log(fullData);
-                const imagesUrl = data.map(obj => obj.images.small)
+                const cards = data.data;
+                console.log(cards);
+                const imagesUrl = cards.map(obj => obj.images.small)
                 const imageContainer = document.getElementById("image-container");
                 imageContainer.innerHTML = "";
                 imagesUrl.forEach(url => {
                     const img = document.createElement("img");
+                    img.classList.add("cards");
                     img.src = url;
                     imageContainer.appendChild(img);
                 });
