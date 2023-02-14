@@ -9,194 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital@1&display=swap" rel="stylesheet">
     <script src="public/xlsx/dist/xlsx.full.min.js"></script>
-    <style>
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        .cards {
-            transition: box-shadow 0.3s ease-in-out;
-        }
-
-        .cards:hover {
-            box-shadow: 20px 20px 50px 15px rgb(0, 0, 0, 0.4);
-            border: 1px black;
-        }
-
-        .box {
-            padding: 10px;
-            margin-bottom: 10px;
-            display: contents;
-        }
-
-        #input::-webkit-input-placeholder {
-            color: #000000;
-            opacity: 1 !important;
-
-        }
-
-        #input::-moz-placeholder {
-            color: #000000;
-            opacity: 1 !important;
-
-        }
-
-        #input:-ms-input-placeholder {
-            color: #000000;
-            opacity: 1 !important;
-
-        }
-
-        #input::-ms-input-placeholder {
-            color: #000000;
-            opacity: 1 !important;
-
-        }
-
-        #input::placeholder {
-            color: #000000;
-            opacity: 1 !important;
-
-
-        }
-
-        .input-group {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1em;
-            position: relative;
-        }
-
-        #input {
-            width: 80%;
-            padding: 0.5em;
-            border-radius: 20px 0px 0px 20px;
-            opacity: 0.6;
-            text-align: center;
-            font-size: 1.2em;
-            font-weight: bolder;
-            border: none;
-            height: 2em;
-            display: inline-block;
-            font-family: inherit;
-        }
-
-        #exportExcell {
-            margin: 5px;
-            border-radius: 20px;
-            border: none;
-            background-color: rgb(255, 255, 255, 0.6);
-            padding: 10px;
-            color: #000000;
-            opacity: 1 !important;
-            font-family: 'Poppins', sans-serif;
-            cursor: pointer;
-        }
-
-        #exportExcell:hover {
-            width: 150px;
-            height: 150px;
-            border: 1px solid;
-            border-color: #000000;
-        }
-
-
-        button#btn {
-            border: none;
-            border-radius: 0px 20px 20px 0px;
-            color: rgb(0, 0, 0);
-            cursor: pointer;
-            font-size: 1.2em;
-            padding: 1em;
-            opacity: 0.6;
-            opacity: 0.5;
-            height: 3em;
-            display: inline-block;
-        }
-
-        #bg {
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-            height: 100vh;
-            width: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-        }
-
-        .presentation {
-            background-color: rgb(255, 255, 255, 0.6);
-            max-width: 50%;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            border-radius: 20px;
-            font-weight: bold;
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        #input:focus {
-            outline: none;
-        }
-
-        #btn i {
-            padding-right: 5px;
-        }
-
-
-
-        html,
-        body {
-            height: 100%;
-            overflow-y: auto;
-        }
-
-        #image-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            overflow: auto
-        }
-
-        #image-container img {
-            margin-bottom: 10px;
-            padding: 1%;
-        }
-
-        .header {
-            overflow: hidden;
-            background-color: #f1f1f1;
-            padding: 20px 10px;
-            background-color: rgb(255, 255, 255, 0.6);
-        }
-
-        @media only screen and (max-width: 600px) {
-            .container {
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-
-            .box {
-                flex-basis: calc(50% - 10px);
-                margin-right: 10px;
-                margin-bottom: 10px;
-            }
-
-            .box:last-child {
-                margin-right: 0;
-            }
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="styles.css">
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9992694285997950"
         crossorigin="anonymous"></script>
@@ -222,7 +35,7 @@
                 <div class="input-group">
                     <input id="input" type="text" placeholder="Search for a pokemon">
                     <button id="btn" type="submit">
-                        <img id="loading-gif" src="images/loading-circle.gif" style="display: none;">
+                        <img id="loading-gif" src="images/loading-circle.gif" style="display: none; width: 20px;">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
@@ -234,6 +47,9 @@
                 </button>
                 <div id="image-container" alt="Large image"></div>
             </div>
+
+            <div id="snackbar">This is a snackbar message!</div>
+
         </div>
     </div>
 

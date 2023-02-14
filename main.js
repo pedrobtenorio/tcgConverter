@@ -7,7 +7,6 @@ let param = ''
 window.onload = function () {
 
     const exportbtn = document.getElementById("exportExcell");
-    exportbtn.addEventListener("click", createExcell);
     var width = screen.width;
     var height = screen.height;
 
@@ -35,7 +34,6 @@ window.onload = function () {
             .then(response => response.json())
             .then(data => {
                 cards = data.data;
-                console.log(cards);
                 const imagesUrl = cards.map(obj => obj.images.small)
                 const imageContainer = document.getElementById("image-container");
                 imageContainer.innerHTML = "";
@@ -47,7 +45,15 @@ window.onload = function () {
                 });
                 lupe.style.display = "inline-block";
                 loadingGif.style.display = "none";
-                exportbtn.style.display = "inline-block"
+
+                if (cards.length == 0) {
+                    showSnackbar("No result for this query.");
+                }
+                else {
+                    showSnackbar("All cards loaded!");
+                    exportbtn.style.display = "inline-block";
+                }
+
 
 
             })
@@ -55,6 +61,7 @@ window.onload = function () {
                 console.error('Error:', error);
                 lupe.style.display = "inline-block";
                 loadingGif.style.display = "none";
+                showSnackbar("Error loading cards");
             });
     }
 
@@ -99,16 +106,20 @@ window.onload = function () {
     setRandomImage()
 }
 
+const exportbtn = document.getElementById("exportExcell");
+
 function createExcell() {
     if (!cards) {
         console.error("cards is not available yet");
+        showSnackbar("Error loading cards");
         return;
     }
     if (typeof cards !== 'object' || !Array.isArray(cards)) {
         console.error('cards is not an array');
+        showSnackbar("Error loading cards");
         return;
     }
-    console.log("exporting")
+    showSnackbar("Exporting!");
     const filteredData = cards.map(item => {
         return {
             "ID": item.id,
@@ -133,8 +144,18 @@ function createExcell() {
         { width: 110 },
         { width: 25 },
     ];
+
+
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, ws, "Sheet1");
     XLSX.writeFile(workbook, document.getElementById("input").value + ".xlsx");
 
+}
+
+
+function showSnackbar(mesage) {
+    var snackbar = document.getElementById("snackbar");
+    snackbar.textContent = mesage;
+    snackbar.className = "show";
+    setTimeout(function () { snackbar.className = snackbar.className.replace("show", ""); }, 3000);
 }
