@@ -1,10 +1,11 @@
-let cards = "";
+
+let cards = [];
 let param = "";
 
 window.onload = function () {
-    const exportbtn = document.getElementById("exportExcell");
     var width = screen.width;
     var height = screen.height;
+
 
     const search = document.getElementById("btn");
     search.onclick = function showImages(event) {
@@ -12,6 +13,16 @@ window.onload = function () {
         const param = pokemon.value;
         if (!param) {
             return;
+        }
+        const exportbtn = document.getElementById("exportExcell");
+
+        exportbtn.onclick = async function () {
+            const response = await createExcell();
+            const blob = new Blob([response.body], { type: response.headers['Content-Type'] });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = document.getElementById("input").value + '.xlsx';;
+            link.click();
         }
 
         const loadingGif = document.getElementById("loading-gif");
@@ -32,8 +43,7 @@ window.onload = function () {
                 data.data.forEach((card) => {
                     card.count = 0;
                 });
-
-                // Create a container for the cards and count input boxes
+                cards = data.data;
                 const cardContainer = document.createElement("div");
                 cardContainer.id = "card-container";
                 document.getElementById("image-container").appendChild(cardContainer);
@@ -68,7 +78,6 @@ window.onload = function () {
                         countInput.stepUp();
                         card.count = parseInt(countInput.value);
                     });
-
                     const decrementBtn = document.createElement("button");
                     decrementBtn.textContent = "-";
                     decrementBtn.classList.add("count-btn", "count-decrement");
@@ -76,7 +85,6 @@ window.onload = function () {
                         countInput.stepDown();
                         card.count = parseInt(countInput.value);
                     });
-
                     const countWrapper = document.createElement("div");
                     countWrapper.classList.add("count-wrapper");
 
@@ -95,6 +103,8 @@ window.onload = function () {
                     const img = document.createElement("img");
                     img.classList.add("cards");
                     img.src = card.images.small;
+                    img.addEventListener('mousemove', rotateCard);
+                    img.addEventListener('mouseout', resetCard);
 
                     cardDiv.appendChild(nameAndCountContainer);
                     cardDiv.appendChild(img);
@@ -120,6 +130,25 @@ window.onload = function () {
                 showSnackbar("Error loading cards");
             });
     };
+
+    function rotateCard(event) {
+        const card = this;
+        const cardRect = card.getBoundingClientRect();
+        const mouseX = event.pageX - cardRect.left;
+        const mouseY = event.pageY - cardRect.top;
+        const halfWidth = cardRect.width / 2;
+        const halfHeight = cardRect.height / 2;
+        const rotateX = -(mouseY - halfHeight) / 10;
+        const rotateY = -(halfWidth - mouseX) / 10;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    }
+
+    // function to reset the card rotation
+    function resetCard() {
+        const card = this
+        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+    }
 
     const bg = document.getElementById("bg");
 
@@ -159,9 +188,9 @@ window.onload = function () {
     setRandomImage();
 };
 
-const exportbtn = document.getElementById("exportExcell");
 
-function createExcell() {
+
+async function createExcell() {
     if (!cards) {
         console.error("cards is not available yet");
         showSnackbar("Error loading cards");
@@ -174,35 +203,65 @@ function createExcell() {
     }
     showSnackbar("Exporting!");
     const filteredData = cards.map((item) => {
+        let flavorText = item.flavorText;
+        if (flavorText === null || flavorText === undefined) {
+            if (Array.isArray(item.rules)) {
+                flavorText = item.rules.join(" ");
+                console.log(flavorText)
+            } else {
+                flavorText = "";
+            }
+        }
         return {
             ID: item.id,
             Name: item.name,
             "Number (First number in the bottom of the card)": item.number,
-            "Total Printed (second number in the bottom of the card)":
-                item.set.printedTotal,
+            "Total Printed (second number in the bottom of the card)": item.set.printedTotal,
             Artist: item.artist,
             Rarity: item.rarity,
-            "Flavor Text": item.flavorText,
+            "Flavor Text": flavorText,
             Set: item.set.name,
+            Count: item.count
         };
     });
 
-    const ws = XLSX.utils.json_to_sheet(filteredData);
-    ws["!cols"] = [
-        { width: 10 },
-        { width: 20 },
-        { width: 10 },
-        { width: 10 },
-        { width: 25 },
-        { width: 10 },
-        { width: 110 },
-        { width: 25 },
-    ];
 
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, ws, "Sheet1");
-    XLSX.writeFile(workbook, document.getElementById("input").value + ".xlsx");
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet(document.getElementById("input").value);
+    worksheet.columns = [
+        { header: 'ID', key: 'ID', width: 15 },
+        { header: 'Name', key: 'Name', width: 25 },
+        { header: 'Nº Right', key: 'Number (First number in the bottom of the card)', width: 10 },
+        { header: 'Nº Left', key: 'Total Printed (second number in the bottom of the card)', width: 10 },
+        { header: 'Artist', key: 'Artist', width: 25 },
+        { header: 'Rarity', key: 'Rarity', width: 25 },
+        { header: 'Flavor Text', key: 'Flavor Text', width: 25 },
+        { header: 'Set', key: 'Set', width: 25 },
+        { header: 'Count', key: 'Count', width: 10 }
+    ];
+    worksheet.getRow(1).eachCell((cell) => {
+        cell.font = { bold: true };
+    });
+    console.log(filteredData);
+
+    worksheet.addRows(filteredData);
+    const buffer = await workbook.xlsx.writeBuffer();
+
+    const fileName = document.getElementById("input").value + 'xlsx';
+
+    const response = {
+        headers: {
+            'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition': `attachment; filename=${fileName}`
+        },
+        statusCode: 200,
+        body: buffer
+    };
+
+    showSnackbar("Exported!");
+    return response;
 }
+
 
 function showSnackbar(mesage) {
     var snackbar = document.getElementById("snackbar");

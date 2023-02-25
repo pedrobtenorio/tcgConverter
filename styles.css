@@ -131,9 +131,15 @@ input[type="number"]::-webkit-outer-spin-button:hover:after {
   display: inline-block;
   margin: 5px;
   transition: box-shadow 0.3s ease-in-out;
-  height: 340px; /* set a fixed height for the cards */
-  width: 250px; /* set a fixed width for the cards */
-  /* additional styles for the card */
+  height: 340px; 
+  width: 250px; 
+  perspective: 1000px
+
+}
+
+.cards:hover {
+  box-shadow: 20px 20px 50px 15px rgb(0, 0, 0, 0.4);
+  border: 1px black;
 }
 
 .card-name {
@@ -156,10 +162,6 @@ input[type="number"]::-webkit-outer-spin-button:hover:after {
   font-weight: 300;
 }
 
-.cards:hover {
-  box-shadow: 20px 20px 50px 15px rgb(0, 0, 0, 0.4);
-  border: 1px black;
-}
 
 .box {
   padding: 10px;
