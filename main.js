@@ -9,6 +9,10 @@ window.onload = function () {
 
     const search = document.getElementById("btn");
     search.onclick = function showImages(event) {
+        const imageContainer = document.getElementById("image-container");
+        while (imageContainer.firstChild) {
+            imageContainer.removeChild(imageContainer.firstChild);
+        }
         const pokemon = document.getElementById("input");
         const param = pokemon.value;
         if (!param) {
