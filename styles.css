@@ -1,257 +1,394 @@
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
 
-        .cards {
-            transition: box-shadow 0.3s ease-in-out;
-        }
+input[type="number"] {
+  width: 60px;
+  height: 28px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  text-align: center;
+  font-size: 16px;
+  padding: 0;
+  margin-bottom: 5px;
+  border-radius: 20px;
 
-        .cards:hover {
-            box-shadow: 20px 20px 50px 15px rgb(0, 0, 0, 0.4);
-            border: 1px black;
-        }
+}
 
-        .box {
-            padding: 10px;
-            margin-bottom: 10px;
-            display: contents;
-        }
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
 
-        #input::-webkit-input-placeholder {
-            color: #000000;
-            opacity: 1 !important;
+input[type="number"]::-webkit-inner-spin-button:after,
+input[type="number"]::-webkit-outer-spin-button:after {
+  content: "";
+  display: block;
+  width: 8px;
+  height: 8px;
+  margin: 4px;
+  background-color: #999;
+  border-radius: 50%;
+}
 
-        }
+input[type="number"]::-webkit-inner-spin-button:hover:after,
+input[type="number"]::-webkit-outer-spin-button:hover:after {
+  background-color: #666;
+}
 
-        #input::-moz-placeholder {
-            color: #000000;
-            opacity: 1 !important;
+.count-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
-        }
+.count-input-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-        #input:-ms-input-placeholder {
-            color: #000000;
-            opacity: 1 !important;
+.count-input {
+  width: 60px;
+  font-size: 16px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
 
-        }
+.count-btn {
+  font-size: 24px;
+  padding: 5px;
+  border: none;
+  border-radius: 3px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
 
-        #input::-ms-input-placeholder {
-            color: #000000;
-            opacity: 1 !important;
+.count-btn:hover {
+  background-color: #0062cc;
+}
 
-        }
+.count-btn-plus {
+  margin-left: 5px;
+}
 
-        #input::placeholder {
-            color: #000000;
-            opacity: 1 !important;
+.btn-wrapper button {
+  border: none;
+  width: 40px;
+  height: 30px;
+  border-radius: 80px;
+}
+.count-btn {
+  font-size: 16px;
+  padding: 5px;
+  border: none;
+  border-radius: 3px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  margin-left: 2px;
+}
 
+.count-btn:hover {
+ background-color: #0062cc;
+}
 
-        }
+.nameAndCountContainer {
+  display: block;
+}
 
-        .input-group {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1em;
-            position: relative;
-        }
+#card-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 80%;
+  margin: 0 auto;
+  justify-content: center; /* center the items horizontally */
+}
 
-        #input {
-            width: 80%;
-            padding: 0.5em;
-            border-radius: 20px 0px 0px 20px;
-            opacity: 0.6;
-            text-align: center;
-            font-size: 1.2em;
-            font-weight: bolder;
-            border: none;
-            height: 2em;
-            display: inline-block;
-            font-family: inherit;
-        }
+.cardBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+  background-color: rgb(255, 255, 255, 0.6);
+  padding: 10px;
+  border-radius: 20px;
+}
 
-        #exportExcell {
-            margin: 5px;
-            border-radius: 20px;
-            border: none;
-            background-color: rgb(255, 255, 255, 0.6);
-            padding: 10px;
-            color: #000000;
-            opacity: 1 !important;
-            font-family: 'Poppins', sans-serif;
-            cursor: pointer;
-        }
+.cards {
+  display: inline-block;
+  margin: 5px;
+  transition: box-shadow 0.3s ease-in-out;
+  height: 340px; /* set a fixed height for the cards */
+  width: 250px; /* set a fixed width for the cards */
+  /* additional styles for the card */
+}
 
-        #exportExcell:hover {
-            width: 150px;
-            height: 150px;
-            border: 1px solid;
-            border-color: #000000;
-        }
+.card-name {
+  width: 100%;
+  white-space: nowrap;
+  overflow-y: auto;
+  text-overflow: ellipsis;
+  text-align: center;
+  margin-bottom: 0;
+}
 
+.code-name {
+  width: 100%;
+  white-space: nowrap;
+  overflow-y: auto;
+  text-overflow: ellipsis;
+  text-align: center;
+  margin-top: 0;
+  font-size: 1em;
+  font-weight: 300;
+}
 
-        button#btn {
-            border: none;
-            border-radius: 0px 20px 20px 0px;
-            color: rgb(0, 0, 0);
-            cursor: pointer;
-            font-size: 1.2em;
-            padding: 1em;
-            opacity: 0.6;
-            opacity: 0.5;
-            height: 3em;
-            display: inline-block;
-        }
+.cards:hover {
+  box-shadow: 20px 20px 50px 15px rgb(0, 0, 0, 0.4);
+  border: 1px black;
+}
 
-        #bg {
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: 100% 100%;
-            height: 100vh;
-            width: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-        }
+.box {
+  padding: 10px;
+  margin-bottom: 10px;
+  display: contents;
+}
 
-        .presentation {
-            background-color: rgb(255, 255, 255, 0.6);
-            max-width: 50%;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            border-radius: 20px;
-            font-weight: bold;
-        }
+#input::-webkit-input-placeholder {
+  color: #000000;
+  opacity: 1 !important;
+}
 
-        body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-        }
+#input::-moz-placeholder {
+  color: #000000;
+  opacity: 1 !important;
+}
 
-        #input:focus {
-            outline: none;
-        }
+#input:-ms-input-placeholder {
+  color: #000000;
+  opacity: 1 !important;
+}
 
-        #btn i {
-            padding-right: 5px;
-        }
+#input::-ms-input-placeholder {
+  color: #000000;
+  opacity: 1 !important;
+}
 
+#input::placeholder {
+  color: #000000;
+  opacity: 1 !important;
+}
 
+.input-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1em;
+  position: relative;
+}
 
-        html,
-        body {
-            height: 100%;
-            overflow-y: auto;
-        }
+#input {
+  width: 80%;
+  padding: 0.5em;
+  border-radius: 20px 0px 0px 20px;
+  opacity: 0.6;
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: bolder;
+  border: none;
+  height: 2em;
+  display: inline-block;
+  font-family: inherit;
+}
 
-        #image-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            overflow: auto
-        }
+#exportExcell {
+  margin: 5px;
+  border-radius: 20px;
+  border: none;
+  background-color: rgb(255, 255, 255, 0.6);
+  padding: 10px;
+  color: #000000;
+  opacity: 1 !important;
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+}
 
-        #image-container img {
-            margin-bottom: 10px;
-            padding: 1%;
-        }
+#exportExcell:hover {
+  width: 150px;
+  height: 150px;
+  border: 1px solid;
+  border-color: #000000;
+}
 
-        .header {
-            overflow: hidden;
-            background-color: #f1f1f1;
-            padding: 20px 10px;
-            background-color: rgba(255, 255, 255, 0.6);
-        }
+button#btn {
+  border: none;
+  border-radius: 0px 20px 20px 0px;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+  font-size: 1.2em;
+  padding: 1em;
+  opacity: 0.6;
+  opacity: 0.5;
+  height: 3em;
+  display: inline-block;
+}
 
-        #snackbar {
-            visibility: hidden;
-            min-width: 250px;
-            border-radius: 20px;
-            margin-left: -125px;
-            background-color: rgba(33, 196, 33);
-            color: #000000;
-            text-align: center;
-            border-radius: 20px;
-            padding: 16px;
-            position: fixed;
-                        font-weight: bolder;
-            z-index: 1;
-            left: 50%;
-            bottom: 30px;
-        }
+#bg {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  height: 100vh;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
 
-        #snackbar.show {
-            visibility: visible;
-            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-            animation: fadein 0.5s, fadeout 0.5s 2.5s;
-        }
+.presentation {
+  background-color: rgb(255, 255, 255, 0.6);
+  max-width: 50%;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 20px;
+  font-weight: bold;
+}
 
-        @-webkit-keyframes fadein {
-            from {
-                bottom: 0;
-                opacity: 0;
-            }
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+}
 
-            to {
-                bottom: 30px;
-                opacity: 1;
-            }
-        }
+#input:focus {
+  outline: none;
+}
 
-        @keyframes fadein {
-            from {
-                bottom: 0;
-                opacity: 0;
-            }
+#btn i {
+  padding-right: 5px;
+}
 
-            to {
-                bottom: 30px;
-                opacity: 1;
-            }
-        }
+html,
+body {
+  height: 100%;
+  overflow-y: auto;
+}
 
-        @-webkit-keyframes fadeout {
-            from {
-                bottom: 30px;
-                opacity: 1;
-            }
+#image-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  overflow: auto;
+}
 
-            to {
-                bottom: 0;
-                opacity: 0;
-            }
-        }
+#image-container img {
+  margin-bottom: 10px;
+  padding: 1%;
+}
 
-        @keyframes fadeout {
-            from {
-                bottom: 30px;
-                opacity: 1;
-            }
+.header {
+  overflow: hidden;
+  background-color: #f1f1f1;
+  padding: 20px 10px;
+  background-color: rgba(255, 255, 255, 0.6);
+}
 
-            to {
-                bottom: 0;
-                opacity: 0;
-            }
-        }
+#snackbar {
+  visibility: hidden;
+  min-width: 250px;
+  border-radius: 20px;
+  margin-left: -125px;
+  background-color: rgba(33, 196, 33);
+  color: #000000;
+  text-align: center;
+  border-radius: 20px;
+  padding: 16px;
+  position: fixed;
+  font-weight: bolder;
+  z-index: 1;
+  left: 50%;
+  bottom: 30px;
+}
 
-        @media only screen and (max-width: 600px) {
-            .container {
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
+#snackbar.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
 
-            .box {
-                flex-basis: calc(50% - 10px);
-                margin-right: 10px;
-                margin-bottom: 10px;
-            }
+@-webkit-keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
 
-            .box:last-child {
-                margin-right: 0;
-            }
-        }
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@keyframes fadein {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeout {
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .container {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .box {
+    flex-basis: calc(50% - 10px);
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+
+  .box:last-child {
+    margin-right: 0;
+  }
+}
