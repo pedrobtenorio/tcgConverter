@@ -6,6 +6,28 @@ window.onload = function () {
     var width = screen.width;
     var height = screen.height;
 
+    const nameRadio = document.getElementById('name');
+    const artistRadio = document.getElementById('artist');
+    const setRadio = document.getElementById('set');
+    const input = document.getElementById('input');
+    let selectOption = 'name'
+
+    nameRadio.addEventListener('click', () => {
+        selectOption = 'name'
+        input.style.display = 'flex';
+
+    });
+
+    artistRadio.addEventListener('click', () => {
+        selectOption = 'artist'
+        input.style.display = 'flex';
+    });
+
+    setRadio.addEventListener('click', () => {
+        selectOption = 'set.name'
+        input.style.display = 'flex';
+    });
+
 
     const search = document.getElementById("btn");
     search.onclick = function showImages(event) {
@@ -14,7 +36,7 @@ window.onload = function () {
             imageContainer.removeChild(imageContainer.firstChild);
         }
         const pokemon = document.getElementById("input");
-        const param = pokemon.value;
+        let param = pokemon.value;
         if (!param) {
             return;
         }
@@ -34,7 +56,8 @@ window.onload = function () {
         event.preventDefault();
         loadingGif.style.display = "inline-block";
         lupe.style.display = "none";
-        const url = "https://api.pokemontcg.io/v2/cards?q=name:" + param;
+        param = "\"" + param + "\""
+        const url = "https://api.pokemontcg.io/v2/cards?q=" + selectOption + ":" + param;
         const headers = {
             "x-api-key": "46b0dc2d-5668-4467-93f7-acfd30d2c085",
         };
@@ -48,6 +71,7 @@ window.onload = function () {
                     card.count = 0;
                 });
                 cards = data.data;
+                console.log(cards)
                 const cardContainer = document.createElement("div");
                 cardContainer.id = "card-container";
                 document.getElementById("image-container").appendChild(cardContainer);

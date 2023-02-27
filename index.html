@@ -34,8 +34,17 @@
                 </div>
             </div>
             <div class="box">
-                <div class="input-group">
-                    <input id="input" type="text" placeholder="Search for a pokemon">
+                <div id="input-group" class="input-group">
+                    <div class="selector">
+                        <p>Please select the query type:</p>
+                        <input type="radio" checked id="name" name="fav_language" value="name">
+                        <label for="name">Card name</label><br>
+                        <input type="radio" id="artist" name="fav_language" value="artist">
+                        <label for="artist">Artist</label><br>
+                        <input type="radio" id="set" name="fav_language" value="set">
+                        <label for="set">Set</label>
+                    </div>
+                    <input id="input" type="text" placeholder="Search for cards">
                     <button id="btn" type="submit">
                         <img id="loading-gif" src="images/loading-circle.gif" style="display: none; width: 20px;">
                         <i class="fas fa-search"></i>
