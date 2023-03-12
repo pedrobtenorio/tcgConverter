@@ -56,7 +56,7 @@ window.onload = function () {
         event.preventDefault();
         loadingGif.style.display = "inline-block";
         lupe.style.display = "none";
-        param = "\"" + param + "\""
+        param = "\"" + param + '*' + "\""
         const url = "https://api.pokemontcg.io/v2/cards?q=" + selectOption + ":" + param;
         const headers = {
             "x-api-key": "46b0dc2d-5668-4467-93f7-acfd30d2c085",
