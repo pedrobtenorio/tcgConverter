@@ -202,6 +202,154 @@ window.onload = function () {
     });
 
 
+    const search = document.getElementById("btn");
+    search.onclick = function showImages(event) {
+        const imageContainer = document.getElementById("image-container");
+        while (imageContainer.firstChild) {
+            imageContainer.removeChild(imageContainer.firstChild);
+        }
+        const pokemon = document.getElementById("input");
+        let param = pokemon.value;
+        if (!param) {
+            return;
+        }
+        const exportbtn = document.getElementById("exportExcell");
+
+        exportbtn.onclick = async function () {
+            const response = await createExcell();
+            const blob = new Blob([response.body], { type: response.headers['Content-Type'] });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = document.getElementById("input").value + '.xlsx';;
+            link.click();
+        }
+
+        const loadingGif = document.getElementById("loading-gif");
+        const lupe = document.getElementsByClassName("fas fa-search")[0];
+        event.preventDefault();
+        loadingGif.style.display = "inline-block";
+        lupe.style.display = "none";
+        param = "\"" + param + '*' + "\""
+        const url = "https://api.pokemontcg.io/v2/cards?q=" + selectOption + ":" + param;
+        const headers = {
+            "x-api-key": "46b0dc2d-5668-4467-93f7-acfd30d2c085",
+        };
+        const response = fetch(url, {
+            headers,
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                // Add a "count" attribute to each card object and initialize it to 0
+                data.data.forEach((card) => {
+                    card.count = 0;
+                });
+                cards = data.data;
+                console.log(cards)
+                const cardContainer = document.createElement("div");
+                cardContainer.id = "card-container";
+                document.getElementById("image-container").appendChild(cardContainer);
+
+                // Create a card and count input box for each card in the response
+                data.data.forEach((card) => {
+                    const cardDiv = document.createElement("div");
+                    cardDiv.classList.add("cardBox");
+
+                    const nameAndCountContainer = document.createElement("div");
+                    nameAndCountContainer.classList.add("nameAndCountContainer");
+
+                    const name = document.createElement("h2");
+                    name.textContent = card.name
+                    name.classList.add("card-name");
+                    const code = document.createElement("h3");
+                    code.textContent = "(" + card.number + '/' + card.set.printedTotal + ")";
+                    code.classList.add("code-name");
+
+                    const countInput = document.createElement("input");
+                    countInput.type = "number";
+                    countInput.id = card.id;
+                    countInput.min = 0;
+                    countInput.value = 0;
+                    countInput.step = 1;
+                    countInput.classList.add("count-input");
+
+                    const incrementBtn = document.createElement("button");
+                    incrementBtn.textContent = "+";
+                    incrementBtn.classList.add("count-btn", "count-increment");
+                    incrementBtn.addEventListener("click", () => {
+                        countInput.stepUp();
+                        card.count = parseInt(countInput.value);
+                    });
+                    const decrementBtn = document.createElement("button");
+                    decrementBtn.textContent = "-";
+                    decrementBtn.classList.add("count-btn", "count-decrement");
+                    decrementBtn.addEventListener("click", () => {
+                        countInput.stepDown();
+                        card.count = parseInt(countInput.value);
+                    });
+                    const countWrapper = document.createElement("div");
+                    countWrapper.classList.add("count-wrapper");
+
+                    const btnWrapper = document.createElement("div");
+                    btnWrapper.classList.add("btn-wrapper");
+                    btnWrapper.appendChild(decrementBtn);
+                    btnWrapper.appendChild(incrementBtn);
+
+                    countWrapper.appendChild(countInput);
+                    countWrapper.appendChild(btnWrapper);
+
+                    nameAndCountContainer.appendChild(name);
+                    nameAndCountContainer.appendChild(code);
+                    nameAndCountContainer.appendChild(countWrapper);
+
+                    const img = document.createElement("img");
+                    img.classList.add("cards");
+                    img.src = card.images.small;
+                    img.addEventListener('mousemove', rotateCard);
+                    img.addEventListener('mouseout', resetCard);
+
+                    cardDiv.appendChild(nameAndCountContainer);
+                    cardDiv.appendChild(img);
+
+                    cardContainer.appendChild(cardDiv);
+                });
+
+
+                lupe.style.display = "inline-block";
+                loadingGif.style.display = "none";
+
+                if (data.data.length == 0) {
+                    showSnackbar("No result for this query.");
+                } else {
+                    showSnackbar("All cards loaded!");
+                    exportbtn.style.display = "inline-block";
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                lupe.style.display = "inline-block";
+                loadingGif.style.display = "none";
+                showSnackbar("Error loading cards");
+            });
+    };
+
+    function rotateCard(event) {
+        const card = this;
+        const cardRect = card.getBoundingClientRect();
+        const mouseX = event.pageX - cardRect.left;
+        const mouseY = event.pageY - cardRect.top;
+        const halfWidth = cardRect.width / 2;
+        const halfHeight = cardRect.height / 2;
+        const rotateX = -(mouseY - halfHeight) / 10;
+        const rotateY = -(halfWidth - mouseX) / 10;
+
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    }
+
+    // function to reset the card rotation
+    function resetCard() {
+        const card = this
+        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+    }
     const bg = document.getElementById("bg");
 
     const bgImage = {
