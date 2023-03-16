@@ -45,13 +45,18 @@
                         <label for="set">Set</label>
                     </div>
                     <input id="input" type="text" placeholder="Search for cards">
-                    <button id="btn" type="submit">
+                    <button id="btn" type="submit" onclick="showImages(event, 1)">
                         <img id="loading-gif" src="images/loading-circle.gif" style="display: none; width: 20px;">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
             </div>
             <div class="box">
+                <div id="paging" class="paging">
+                    <button id="prev" class="count-btn"><i class="fas fa-arrow-left"></i></button>
+                    <button id="next" class="count-btn"><i class="fas fa-arrow-right"></i></button>
+                </div>
+                <div id="loading" class="presentation" style="display: none;">Loading...</div>
                 <button id="exportExcell" type="submit" style="display: none;">
                     export to excell
 
