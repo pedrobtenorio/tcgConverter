@@ -50,6 +50,7 @@ function showImages(event, currentPage) {
     }
 
     const loadingGif = document.getElementById("loading-gif");
+    loadingElement.style.display = "block";
     const lupe = document.getElementsByClassName("fas fa-search")[0];
     event.preventDefault();
     loadingGif.style.display = "inline-block";
@@ -70,6 +71,9 @@ function showImages(event, currentPage) {
             });
             cards = data.data;
             totalCount = data.totalCount;
+            if (totalCount > 250) {
+                paging.style.display = 'block';
+            }
             const cardContainer = document.createElement("div");
             cardContainer.id = "card-container";
             document.getElementById("image-container").appendChild(cardContainer);
@@ -141,6 +145,7 @@ function showImages(event, currentPage) {
 
             lupe.style.display = "inline-block";
             loadingGif.style.display = "none";
+            loadingElement.style.display = "none";
 
             if (data.data.length == 0) {
                 showSnackbar("No result for this query.");
@@ -167,10 +172,10 @@ window.onload = function () {
     const artistRadio = document.getElementById('artist');
     const setRadio = document.getElementById('set');
     const input = document.getElementById('input');
-
-
+    const paging = document.getElementById('paging')
     const prevBtn = document.getElementById("prev");
     const nextBtn = document.getElementById("next");
+    paging.style.display = 'none';
     prevBtn.addEventListener('click', () => {
         currentPage -= 1;
         showImages(event, currentPage);
