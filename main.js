@@ -257,7 +257,7 @@ async function createExcel() {
     const imageUrls = cards.map((item) => item.images.small);
     const imageBuffers = await Promise.all(
         imageUrls.map(async (url) => {
-            const response = await fetch(url);
+            const response = await fetch(url, { mode: 'no-cors' });
             const buffer = await response.arrayBuffer();
             return new Uint8Array(buffer);
         })
